@@ -1,0 +1,24 @@
+{
+    "name": "volkerschulz/cli-logger",
+    "description": "Logger for PHP CLI",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "volkerschulz\\FileCache\\": "src/CliLogger/"
+        },
+        "files": [
+            "src/CliLogger/CliLogger.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "volkerschulz",
+            "email": "github@volkerschulz.de"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=8.0.0"
+    }
+}
