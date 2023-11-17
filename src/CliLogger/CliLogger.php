@@ -50,6 +50,18 @@ class CliLogger {
         return self::log(self::objToString($message), '');
     }
 
+    public static function cls() : bool {
+        self::bootstrap();
+        if(!is_resource(self::$std_out))
+            return false;
+
+        if(!stream_isatty(self::$std_out))
+            return false;
+
+        fwrite(self::$std_out, "\e[2J\e[H");
+        return true;
+    }
+
     public static function setOptions(array $options) : bool {
         self::bootstrap();
 
