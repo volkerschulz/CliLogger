@@ -10,6 +10,8 @@ class CliLogger {
     protected static $log_file = false;
     protected static $std_out = false;
     protected static $std_err = false;
+    protected static bool $handles_exceptions = false;
+    protected static $previous_exception_handler = null;
 
     public static function log(string $message, string $type = '') : bool {
         self::bootstrap();
@@ -71,6 +73,7 @@ class CliLogger {
     }
 
     public static function setLogFile(string $filename, string $mode='a') : bool {
+        self::bootstrap();
         ob_start();
         $fp = fopen($filename, $mode);
         $output = ob_get_clean();
@@ -83,6 +86,66 @@ class CliLogger {
         }
         self::$log_file = $fp;
         return is_resource(self::$log_file);
+    }
+
+    public static function handleExceptions(bool $catch = true) : bool {
+        self::bootstrap();
+        if($catch && !self::$handles_exceptions) {
+            self::$previous_exception_handler = set_exception_handler([self::class, 'exception_handler']);
+            self::$handles_exceptions = true;
+            return true;
+        }
+        if(!$catch && self::$handles_exceptions) {
+            set_exception_handler(self::$previous_exception_handler);
+            self::$handles_exceptions = false;
+            return true;
+        }
+        return false;
+    }
+
+    public static function exception_handler(\Throwable $exception) {
+        self::error('Uncaught exception: ' . $exception->getMessage() . ' in ' . $exception->getFile() . ':' . $exception->getLine());
+        self::debug("Stack trace:\n" . $exception->getTraceAsString());
+        self::debug("  thrown in " . $exception->getFile() . ':' . $exception->getLine());
+        exit($exception->getCode());
+    }
+
+    public static function handleErrors(?int $error_levels = null) : bool {
+        self::bootstrap();
+        if($error_levels === null)
+            $error_levels = error_reporting();
+
+        set_error_handler([self::class, 'error_handler'], $error_levels);
+        return true;
+    }
+
+    public static function error_handler(int $errno, string $errstr, ?string $errfile, ?int $errline) {
+        $message = $errstr . ' in ' . $errfile . ':' . $errline;
+        switch($errno) {
+            case E_ERROR:
+            case E_USER_ERROR:
+            case E_CORE_ERROR:
+            case E_COMPILE_ERROR:
+            case E_RECOVERABLE_ERROR:
+                self::error($message);
+                exit($errno);
+            case E_WARNING:
+            case E_CORE_WARNING:
+            case E_COMPILE_WARNING:
+            case E_USER_WARNING:
+                self::warning($message);
+                return true;
+            case E_NOTICE:
+            case E_USER_NOTICE:
+                self::notice($message);
+                return true;
+            case E_STRICT:
+            case E_DEPRECATED:
+            case E_USER_DEPRECATED:
+                self::debug($message);
+                return true;
+        }
+        return false;
     }
 
     private static function objToString(mixed $obj) : string {
