@@ -3,7 +3,7 @@
 Output errors, warnings, success or debug messages to ANSI terminal (color coded) or to dedicated log files (plain text). Automatically add timestamps and / or prefixes.
 
 ## Installation
-The recommended way to install FileCache is through
+The recommended way to install CliLogger is through
 [Composer](https://getcomposer.org/).
 ```bash
 composer require volkerschulz/cli-logger
