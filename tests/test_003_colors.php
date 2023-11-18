@@ -51,3 +51,6 @@ log::debug('This is a general debug message');
 
 log::setOptions(['format' => ['d' => ['cyan', 'strikethrough']]]);
 log::debug('This is a general debug message');
+
+log::setOptions(['format' => ['d' => ['cyan', 'dim', 'strikethrough', 'blink']]]);
+log::debug('This is a general debug message');
