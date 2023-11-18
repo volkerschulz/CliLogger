@@ -171,9 +171,9 @@ class CliLogger {
         ];
 
         self::$ansi_codes = [
-            'bold' => 1, 'italic' => 3, 'underline' => 4, 'strikethrough' => 9,
+            'bold' => 1, 'dim' => 2, 'italic' => 3, 'underline' => 4, 'blink' => 5, 'strikethrough' => 9,
             'black' => 30, 'red' => 31, 'green' => 32, 'yellow' => 33,'blue' => 34, 'magenta' => 35, 'cyan' => 36, 'white' => 37,
-            'blackbg' => 40, 'redbg' => 41, 'greenbg' => 42, 'yellowbg' => 43,'bluebg' => 44, 'magentabg' => 45, 'cyanbg' => 46, 'lightgreybg' => 47
+            'blackbg' => 40, 'redbg' => 41, 'greenbg' => 42, 'yellowbg' => 43,'bluebg' => 44, 'magentabg' => 45, 'cyanbg' => 46, 'whitebg' => 47
         ];
 
         if(defined('STDERR')) {
